@@ -1,0 +1,5 @@
+saveNote.bat
+pull.bat
+.ipynb_checkpoints
+__pycache__
+Data/population
