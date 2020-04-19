@@ -101,6 +101,7 @@ def sysExec(cmd, print_stdout=False, stripped=True):
 ############################################################
 def updateGit():
     print ('Updating git repository: ' + casesGitDirName + '...')
+    sysExec('git -C ' + casesGitDirName +' checkout master', print_stdout=True)
     sysExec('git -C ' + casesGitDirName +' pull', print_stdout=True)
     print('Repository updated.')
 ############################################################
