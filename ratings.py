@@ -36,7 +36,9 @@ columnReplaces = {
 
     'deathsPerRecSmoothed': 'Deaths per Recovered (' + smoothWindow + '-averaged)',
     'deathsPerPopSmoothed': 'Deaths per Population (' + smoothWindow + '-averaged)',
-    'casesPerPopSmoothed': 'Cases per Population (' + smoothWindow + '-averaged)'
+    'casesPerPopSmoothed': 'Cases per Population (' + smoothWindow + '-averaged)',
+    
+    'dCasesPerPopSmoothed': 'New Cases per Population (' + smoothWindow + '-averaged)'
 }
 ############################################################
 def ensureDirsCreated():
@@ -231,6 +233,9 @@ def mergeForCountry(data, name='World'):
     addSmoothed(res, 'deathsPerRec', smoothRadius)
     addSmoothed(res, 'deathsPerPop', smoothRadius)
     addSmoothed(res, 'casesPerPop', smoothRadius)
+
+    res['dCasesPerPop'] = res['dCases']/res['pop']
+    addSmoothed(res, 'dCasesPerPop', smoothRadius)
     
     return res[1:]
 ############################################################
@@ -259,6 +264,7 @@ if __name__ == '__main__':
     data = mergeForCountriesList(data, names=countries, starting_date=startingDate)
     paintList(data, 'dCasesSmoothed', relToCases=False)
     #paintList(data, 'dDeathsSmoothed', relToCases=False)
+    paintList(data, 'dCasesPerPopSmoothed', relToCases=False)
     #paintList(data, 'deathsPerPopSmoothed', relToCases=True)
     
     from dataloader import sysExec
