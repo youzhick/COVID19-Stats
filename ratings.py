@@ -262,9 +262,9 @@ if __name__ == '__main__':
     countries=['Russia', 'Italy', 'Spain', 'US', 'Germany']
     #countries=['China']
     data = mergeForCountriesList(data, names=countries, starting_date=startingDate)
-    paintList(data, 'dCasesSmoothed', relToCases=False)
-    #paintList(data, 'dDeathsSmoothed', relToCases=False)
-    paintList(data, 'dCasesPerPopSmoothed', relToCases=False)
+    paintList(data, 'deaths', relToCases=False)
+    paintList(data, 'dDeathsSmoothed', relToCases=False)
+    #paintList(data, 'dCasesPerPopSmoothed', relToCases=False)
     #paintList(data, 'deathsPerPopSmoothed', relToCases=True)
     
     from dataloader import sysExec
