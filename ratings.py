@@ -21,6 +21,7 @@ columnReplaces = {
     'cases': 'Total cases',
     'area': 'Area',
     'urban': 'Urban percentage',
+    'mortality' : 'Death outcome percentage',
     
     'dCases': 'New Cases',
     'dRecovered': 'New Recovered',
@@ -29,6 +30,7 @@ columnReplaces = {
     'deathsPerRec': 'Deaths per Recovered',
     'deathsPerPop': 'Deaths per Population',
     'casesPerPop': 'Cases per Population',
+    'dCasesPerPop': 'New Cases per Population',
     
     'dCasesSmoothed': 'New Cases (' + smoothWindow + '-averaged)',
     'dRecoveredSmoothed': 'New Recovered (' + smoothWindow + '-averaged)',
@@ -38,7 +40,9 @@ columnReplaces = {
     'deathsPerPopSmoothed': 'Deaths per Population (' + smoothWindow + '-averaged)',
     'casesPerPopSmoothed': 'Cases per Population (' + smoothWindow + '-averaged)',
     
-    'dCasesPerPopSmoothed': 'New Cases per Population (' + smoothWindow + '-averaged)'
+    'dCasesPerPopSmoothed': 'New Cases per Population (' + smoothWindow + '-averaged)',
+
+    'mortalitySmoothed' : 'Death outcome percentage (' + smoothWindow + '-averaged)'
 }
 ############################################################
 def ensureDirsCreated():
@@ -171,6 +175,7 @@ def mergeForDate(data, date=None):
     recoveredT.rename(columns={date: 'recovered'}, inplace=True);
     
     res = pd.merge(pd.merge(casesT, deathsT), recoveredT)
+    res['mortality'] = res['deaths']*100/(res['recovered'] + res['deaths'])
 
     return res, date
 ############################################################
@@ -237,6 +242,10 @@ def mergeForCountry(data, name='World'):
     res['dCasesPerPop'] = res['dCases']/res['pop']
     addSmoothed(res, 'dCasesPerPop', smoothRadius)
     
+    res['mortality'] = res['deaths']*100/(res['recovered'] + res['deaths'])
+    addSmoothed(res, 'mortality', smoothRadius)
+
+    
     return res[1:]
 ############################################################
 def mergeForCountriesList(data, names=['World'], starting_date=None):
@@ -251,23 +260,24 @@ if __name__ == '__main__':
     data = loadAll(doUpdateGit=True)
     #data = loadAll(doUpdateGit=False)
 
-    #today = mergeForDate(data)
+    today = mergeForDate(data)
     #showRating(today, 10, 'deaths', relTo='area', doSave=True)
     #showRating(today, 10, 'recovered', relTo='pop')
+    showRating(today, 20, 'mortality')
     
     
     
     startingDate = None
-    startingDate = '3/1/20'
-    countries=['Russia', 'Italy', 'Spain', 'US', 'Germany']
+    #startingDate = '3/1/20'
+    countries=['Russia', 'Italy', 'Spain', 'US', 'Germany', 'World']
     #countries=['China']
     data = mergeForCountriesList(data, names=countries, starting_date=startingDate)
-    paintList(data, 'deaths', relToCases=False)
-    paintList(data, 'dDeathsSmoothed', relToCases=False)
-    #paintList(data, 'dCasesPerPopSmoothed', relToCases=False)
+    #paintList(data, 'deaths', relToCases=False)
+    #paintList(data, 'dDeathsSmoothed', relToCases=False)
+    paintList(data, 'mortalitySmoothed', relToCases=False)
     #paintList(data, 'deathsPerPopSmoothed', relToCases=True)
     
-    from dataloader import sysExec
-    sysExec('dir', print_stdout=True)
+    #from dataloader import sysExec
+    #sysExec('dir', print_stdout=True)
     
     print('Done.')
