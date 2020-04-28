@@ -21,7 +21,7 @@ columnReplaces = {
     'cases': 'Total cases',
     'area': 'Area',
     'urban': 'Urban percentage',
-    'mortality' : 'Death outcome percentage',
+    'fatality' : 'Death outcome percentage',
     
     'dCases': 'New Cases',
     'dRecovered': 'New Recovered',
@@ -42,7 +42,7 @@ columnReplaces = {
     
     'dCasesPerPopSmoothed': 'New Cases per Population (' + smoothWindow + '-averaged)',
 
-    'mortalitySmoothed' : 'Death outcome percentage (' + smoothWindow + '-averaged)'
+    'fatalitySmoothed' : 'Death outcome percentage (' + smoothWindow + '-averaged)'
 }
 ############################################################
 def ensureDirsCreated():
@@ -175,7 +175,7 @@ def mergeForDate(data, date=None):
     recoveredT.rename(columns={date: 'recovered'}, inplace=True);
     
     res = pd.merge(pd.merge(casesT, deathsT), recoveredT)
-    res['mortality'] = res['deaths']*100/(res['recovered'] + res['deaths'])
+    res['fatality'] = res['deaths']*100/(res['recovered'] + res['deaths'])
 
     return res, date
 ############################################################
@@ -242,8 +242,8 @@ def mergeForCountry(data, name='World'):
     res['dCasesPerPop'] = res['dCases']/res['pop']
     addSmoothed(res, 'dCasesPerPop', smoothRadius)
     
-    res['mortality'] = res['deaths']*100/(res['recovered'] + res['deaths'])
-    addSmoothed(res, 'mortality', smoothRadius)
+    res['fatality'] = res['deaths']*100/(res['recovered'] + res['deaths'])
+    addSmoothed(res, 'fatality', smoothRadius)
 
     
     return res[1:]
@@ -263,7 +263,7 @@ if __name__ == '__main__':
     today = mergeForDate(data)
     #showRating(today, 10, 'deaths', relTo='area', doSave=True)
     #showRating(today, 10, 'recovered', relTo='pop')
-    showRating(today, 20, 'mortality')
+    showRating(today, 20, 'fatality')
     
     
     
@@ -274,7 +274,7 @@ if __name__ == '__main__':
     data = mergeForCountriesList(data, names=countries, starting_date=startingDate)
     #paintList(data, 'deaths', relToCases=False)
     #paintList(data, 'dDeathsSmoothed', relToCases=False)
-    paintList(data, 'mortalitySmoothed', relToCases=False)
+    paintList(data, 'fatalitySmoothed', relToCases=False)
     #paintList(data, 'deathsPerPopSmoothed', relToCases=True)
     
     #from dataloader import sysExec
