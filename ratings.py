@@ -31,6 +31,8 @@ columnReplaces = {
     'deathsPerPop': 'Deaths per Population',
     'casesPerPop': 'Cases per Population',
     'dCasesPerPop': 'New Cases per Population',
+
+    'activeCases': 'Active Cases',
     
     'dCasesSmoothed': 'New Cases (' + smoothWindow + '-averaged)',
     'dRecoveredSmoothed': 'New Recovered (' + smoothWindow + '-averaged)',
@@ -41,6 +43,8 @@ columnReplaces = {
     'casesPerPopSmoothed': 'Cases per Population (' + smoothWindow + '-averaged)',
     
     'dCasesPerPopSmoothed': 'New Cases per Population (' + smoothWindow + '-averaged)',
+
+    'activeCasesSmoothed': 'Active Cases (' + smoothWindow + '-averaged)',
 
     'fatalitySmoothed' : 'Death outcome percentage (' + smoothWindow + '-averaged)'
 }
@@ -225,6 +229,7 @@ def mergeForCountry(data, name='World'):
     res['deathsPerRec'] = res['deaths']/res['recovered']
     res['deathsPerPop'] = res['deaths']/res['pop']
     res['casesPerPop'] = res['cases']/res['pop']
+    res['activeCases'] = res['cases'] - res['deaths'] - res['recovered']
     
     res['dCases'] = res['cases'] - res['cases'].shift(1)
     res['dDeaths'] = res['deaths'] - res['deaths'].shift(1)
@@ -238,6 +243,8 @@ def mergeForCountry(data, name='World'):
     addSmoothed(res, 'deathsPerRec', smoothRadius)
     addSmoothed(res, 'deathsPerPop', smoothRadius)
     addSmoothed(res, 'casesPerPop', smoothRadius)
+
+    addSmoothed(res, 'activeCases', smoothRadius)
 
     res['dCasesPerPop'] = res['dCases']/res['pop']
     addSmoothed(res, 'dCasesPerPop', smoothRadius)
@@ -274,7 +281,8 @@ if __name__ == '__main__':
     data = mergeForCountriesList(data, names=countries, starting_date=startingDate)
     #paintList(data, 'deaths', relToCases=False)
     #paintList(data, 'dDeathsSmoothed', relToCases=False)
-    paintList(data, 'fatalitySmoothed', relToCases=False)
+    #paintList(data, 'fatalitySmoothed', relToCases=False)
+    paintList(data, 'activeCasesSmoothed', relToCases=False)
     #paintList(data, 'deathsPerPopSmoothed', relToCases=True)
     
     #from dataloader import sysExec
