@@ -11,7 +11,7 @@ import seaborn; seaborn.set()
 # Settings
 graphsDirName = 'OutPics'
 populationRelationScale = 100000
-smoothRadius = 1
+smoothRadius = 3
 ############################################################
 smoothWindow=str(int(smoothRadius)*2 + 1)
 columnReplaces = {
@@ -31,6 +31,7 @@ columnReplaces = {
     'deathsPerPop': 'Deaths per Population',
     'casesPerPop': 'Cases per Population',
     'dCasesPerPop': 'New Cases per Population',
+    'dDeathsPerPop': 'New Deaths per Population',
 
     'activeCases': 'Active Cases',
     
@@ -43,6 +44,7 @@ columnReplaces = {
     'casesPerPopSmoothed': 'Cases per Population (' + smoothWindow + '-averaged)',
     
     'dCasesPerPopSmoothed': 'New Cases per Population (' + smoothWindow + '-averaged)',
+    'dDeathsPerPopSmoothed': 'New Deaths per Population (' + smoothWindow + '-averaged)',
 
     'activeCasesSmoothed': 'Active Cases (' + smoothWindow + '-averaged)',
 
@@ -248,6 +250,9 @@ def mergeForCountry(data, name='World'):
 
     res['dCasesPerPop'] = res['dCases']/res['pop']
     addSmoothed(res, 'dCasesPerPop', smoothRadius)
+    
+    res['dDeathsPerPop'] = res['dDeaths']/res['pop']
+    addSmoothed(res, 'dDeathsPerPop', smoothRadius)
     
     res['fatality'] = res['deaths']*100/(res['recovered'] + res['deaths'])
     addSmoothed(res, 'fatality', smoothRadius)
